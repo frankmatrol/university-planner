@@ -1,14 +1,11 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 const config = require("./config");
 
-const db = mysql.createConnection(config);
-
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-    return;
-  }
-  console.log("Connected to MySQL database.");
+const pool = mysql.createPool({
+  ...config,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-module.exports = db;
+module.exports = pool;
